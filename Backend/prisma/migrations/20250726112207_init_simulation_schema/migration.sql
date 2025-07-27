@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Simulation" ALTER COLUMN "postUrl" DROP NOT NULL,
+ALTER COLUMN "postUrl" SET DATA TYPE TEXT;
