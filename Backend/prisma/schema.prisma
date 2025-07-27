@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String          @id @default(uuid())
+  email            String          @unique
+  name             String?
+  profileImageUrl  String?         
+  redditId         String?         @unique
+  redditUsername   String?
+  createdAt        DateTime        @default(now())
+  
+  // Reddit-specific analytics data
+  redditKarma      Int?            @default(0)
+  redditAccountAge  Int?           // in days
+  totalPostKarma   Int?            @default(0)
+  commentKarma     Int?            @default(0)
+  averageUpvotes   Int?            @default(0)
+  averageComments  Int?            @default(0)
+  engagementRate   Float?          @default(0.0)
+  totalPosts       Int?            @default(0)
+  verified         Boolean         @default(false)
+  lastActive       DateTime?
+  
+  simulations      Simulation[]
+  captions         Caption[]
+
+  @@index([email])
+  @@index([id])
+  @@index([redditId])
+  @@index([redditKarma])
+  @@index([engagementRate])
+}
+
+model Simulation {
+  id               String          @id @default(uuid())
+  content          String   
+<<<<<<< HEAD
+  postUrl          String?         // Cloudinary image URL
+  status           Status          @default(PENDING) 
+  createdAt        DateTime        @default(now())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id])
+  
+  platform         Platform          
+  agentReactions   AgentReaction[]
+  summary          Summary?
+  summaryId        String?
+
+  PostSuggestion PostSuggestion[]
+
+  @@index([userId])
+  @@index([id])
+  @@index([platform])
+  @@index([createdAt])
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+enum Platform {
+  FACEBOOK
+  INSTAGRAM
+  TWITTER
+  LINKEDIN
+  REDDIT
+}
+
+model AgentReaction {
+  id               String          @id @default(uuid())
+  simulationId     String
+  agentName        String          
+  action           String          
+  reason           String          
+  sentiment        String?         
+
+  simulation       Simulation      @relation(fields: [simulationId], references: [id])
+
+  @@index([simulationId])
+  @@index([id])
+}
+
+model PostSuggestion {
+  id             String     @id @default(uuid())
+  simulationId   String
+  suggestionText String     
+  applied        Boolean    @default(false) 
+  createdAt      DateTime   @default(now())
+
+  simulation     Simulation @relation(fields: [simulationId], references: [id])
+
+  @@index([simulationId])
+  @@index([id])
+  @@index([applied])
+}
+
+model Summary {
+  id               String   @id @default(uuid())
+  simulationId     String   @unique
+  summaryText      String
+  toneCloud        Json
+  toneBreakdown    Json     
+  sectionFeedback  Json     
+  engagementData   Json     
+  audienceMatch    String?  
+  feedbackScore    Int?     
+  createdAt        DateTime @default(now())
+
+  simulation       Simulation @relation(fields: [simulationId], references: [id])
+
+  @@index([simulationId])
+  @@index([id])
+  @@index([createdAt])
+
+}
+
+model Caption {
+  id          String   @id @default(uuid())
+  userId      String
+  caption     String
+  platform    String
+  tone        String
+  captionType String
+  description String
+  photoCount  Int
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+}

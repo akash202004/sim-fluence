@@ -1,0 +1,22 @@
+{
+  "name": "@sim-fluence/zod-prisma-schemas",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "keywords": [
+    "automation",
+    "ai",
+    "linkedin",
+    "x"
+  ],
+  "author": "Sim-Fluence",
+  "license": "MIT",
+  "description": "Sim-Fluence simulates social media engagement using AI, helping creators test and optimize posts before publishing."
+}
